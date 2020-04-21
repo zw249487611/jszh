@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.bfll.dao.NewJiangsuAc07Dao">
+    
+	<sql id="jiangsuAc07Columns">
+		a.id AS "id",
+		a.acid AS "acid",
+		a.aac060 AS "aac060",
+		a.aac101 AS "aac101",
+		a.aac100 AS "aac100",
+		a.aac061 AS "aac061",
+		a.aac062 AS "aac062",
+		a.aac063 AS "aac063",
+		a.aac064 AS "aac064",
+		a.aac065 AS "aac065",
+		a.aac066 AS "aac066",
+		a.aac067 AS "aac067",
+		a.aac068 AS "aac068",
+		a.aac069 AS "aac069",
+		a.aac071 AS "aac071",
+		a.aac072 AS "aac072",
+		a.aac073 AS "aac073",
+		a.aac074 AS "aac074",
+		a.aac075 AS "aac075",
+		a.aac076 AS "aac076",
+		a.aac077 AS "aac077",
+		a.aac078 AS "aac078",
+		a.aac079 AS "aac079",
+		a.aac080 AS "aac080",
+		a.aac081 AS "aac081",
+		a.aac082 AS "aac082",
+		a.aac083 AS "aac083",
+		a.aac084 AS "aac084",
+		a.aac085 AS "aac085",
+		a.aac086 AS "aac086",
+		a.aac087 AS "aac087",
+		a.aac088 AS "aac088",
+		a.aac089 AS "aac089",
+		a.aac090 AS "aac090",
+		a.aac091 AS "aac091",
+		a.aac092 AS "aac092",
+		a.aac093 AS "aac093",
+		a.aac094 AS "aac094",
+		a.aac095 AS "aac095",
+		a.aac096 AS "aac096",
+		a.aac097 AS "aac097",
+		a.aac098 AS "aac098",
+		a.aac099 AS "aac099",
+		a.aar001 AS "aar001",
+		a.aar022 AS "aar022",
+		a.aar023 AS "aar023",
+		a.aar024 AS "aar024",
+		a.aar025 AS "aar025",
+		a.baz002 AS "baz002",
+		a.aar008 AS "aar008",
+		a.aac102 AS "aac102",
+		a.aar040 AS "aar040",
+		a.aar041 AS "aar041",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="jiangsuAc07Joins">
+	</sql>
+	
+    
+	<select id="get" resultType="NewJiangsuAc07" >
+		SELECT 
+			<include refid="jiangsuAc07Columns"/>
+		FROM jiangsu_ac07 a
+		<include refid="jiangsuAc07Joins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findByAcid" resultType="NewJiangsuAc07">
+		SELECT 
+			<include refid="jiangsuAc07Columns"/>
+		FROM jiangsu_ac07 a
+		<include refid="jiangsuAc07Joins"/>
+		WHERE a.acid = #{id}
+		AND a.aar041 = #{quarter}
+		AND a.del_flag = '0'
+	</select>
+	
+	<select id="findByAcidAndNd" resultType="NewJiangsuAc07">
+				SELECT
+					ac07.id as id,
+					ac07.acid as acid,
+					IFNULL(ac07.AAC082,0) as AAC082,
+					IFNULL(ac07.AAC071,0) as AAC071,
+					IFNULL(ac07.AAC084,0) as AAC084,
+					IFNULL(ac07.AAC090,0) as AAC090,
+					IFNULL(ac07.AAC099,0) as AAC099,
+					ac07.AAR040 as AAR040
+				FROM
+					jiangsu_ac07 ac07
+				INNER JOIN (
+							SELECT
+								MAX(create_date) AS create_date,
+								acid
+								FROM
+							jiangsu_ac07
+							where del_flag = '0' 
+							and acid=#{id}
+							GROUP BY acid
+							)	a
+				ON  a.create_date=ac07.create_date and ac07.Acid = a.acid and ac07.AAR040 = #{nd}
+				JOIN jiangsu_ac01 ac01 ON ac07.Acid = ac01.id 
+				WHERE
+				ac07.del_flag = '0'
+	</select>
+	
+	<select id="findList" resultType="NewJiangsuAc07" >
+		SELECT 
+			<include refid="jiangsuAc07Columns"/>
+		FROM jiangsu_ac07 a
+		<include refid="jiangsuAc07Joins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="aar001 != null and aar001 != ''">
+				AND a.aar001 = #{aar001}
+			</if>
+			<if test="aar008 != null and aar008 != ''">
+				AND a.aar008 = #{aar008}
+			</if>
+			<if test="aar040 != null and aar040 != ''">
+				AND a.aar040 = #{aar040}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="NewJiangsuAc07" >
+		SELECT 
+			<include refid="jiangsuAc07Columns"/>
+		FROM jiangsu_ac07 a
+		<include refid="jiangsuAc07Joins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jiangsu_ac07(
+			id,
+			acid,
+			aac060,
+			aac101,
+			aac100,
+			aac061,
+			aac062,
+			aac063,
+			aac064,
+			aac065,
+			aac066,
+			aac067,
+			aac068,
+			aac069,
+			aac071,
+			aac072,
+			aac073,
+			aac074,
+			aac075,
+			aac076,
+			aac077,
+			aac078,
+			aac079,
+			aac080,
+			aac081,
+			aac082,
+			aac083,
+			aac084,
+			aac085,
+			aac086,
+			aac087,
+			aac088,
+			aac089,
+			aac090,
+			aac091,
+			aac092,
+			aac093,
+			aac094,
+			aac095,
+			aac096,
+			aac097,
+			aac098,
+			aac099,
+			aar001,
+			aar022,
+			aar023,
+			aar024,
+			aar025,
+			baz002,
+			aar008,
+			aac102,
+			aar040,
+			aar041,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag
+		) VALUES (
+			#{id},
+			#{acid},
+			#{aac060},
+			#{aac101},
+			#{aac100},
+			#{aac061},
+			#{aac062},
+			#{aac063},
+			#{aac064},
+			#{aac065},
+			#{aac066},
+			#{aac067},
+			#{aac068},
+			#{aac069},
+			#{aac071},
+			#{aac072},
+			#{aac073},
+			#{aac074},
+			#{aac075},
+			#{aac076},
+			#{aac077},
+			#{aac078},
+			#{aac079},
+			#{aac080},
+			#{aac081},
+			#{aac082},
+			#{aac083},
+			#{aac084},
+			#{aac085},
+			#{aac086},
+			#{aac087},
+			#{aac088},
+			#{aac089},
+			#{aac090},
+			#{aac091},
+			#{aac092},
+			#{aac093},
+			#{aac094},
+			#{aac095},
+			#{aac096},
+			#{aac097},
+			#{aac098},
+			#{aac099},
+			#{aar001},
+			#{aar022},
+			#{aar023},
+			#{aar024},
+			#{aar025},
+			#{baz002},
+			#{aar008},
+			#{aac102},
+			#{aar040},
+			#{aar041},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jiangsu_ac07 SET 	
+			acid = #{acid},
+			aac060 = #{aac060},
+			aac101 = #{aac101},
+			aac100 = #{aac100},
+			aac061 = #{aac061},
+			aac062 = #{aac062},
+			aac063 = #{aac063},
+			aac064 = #{aac064},
+			aac065 = #{aac065},
+			aac066 = #{aac066},
+			aac067 = #{aac067},
+			aac068 = #{aac068},
+			aac069 = #{aac069},
+			aac071 = #{aac071},
+			aac072 = #{aac072},
+			aac073 = #{aac073},
+			aac074 = #{aac074},
+			aac075 = #{aac075},
+			aac076 = #{aac076},
+			aac077 = #{aac077},
+			aac078 = #{aac078},
+			aac079 = #{aac079},
+			aac080 = #{aac080},
+			aac081 = #{aac081},
+			aac082 = #{aac082},
+			aac083 = #{aac083},
+			aac084 = #{aac084},
+			aac085 = #{aac085},
+			aac086 = #{aac086},
+			aac087 = #{aac087},
+			aac088 = #{aac088},
+			aac089 = #{aac089},
+			aac090 = #{aac090},
+			aac091 = #{aac091},
+			aac092 = #{aac092},
+			aac093 = #{aac093},
+			aac094 = #{aac094},
+			aac095 = #{aac095},
+			aac096 = #{aac096},
+			aac097 = #{aac097},
+			aac098 = #{aac098},
+			aac099 = #{aac099},
+			aar001 = #{aar001},
+			aar022 = #{aar022},
+			aar023 = #{aar023},
+			aar024 = #{aar024},
+			aar025 = #{aar025},
+			baz002 = #{baz002},
+			aar008 = #{aar008},
+			aac102 = #{aac102},
+			aar040 = #{aar040},
+			aar041 = #{aar041},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM jiangsu_ac07
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE jiangsu_ac07 SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="NewJiangsuAc07" statementType="STATEMENT">
+		select * FROM jiangsu_ac07  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

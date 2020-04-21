@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.dzdlviewspot.dao.DzdlViewSpotDao">
+    
+	<sql id="dzdlViewSpotColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.name AS "name",
+		a.logo AS "logo",
+		a.description AS "description",
+		a.details AS "details",
+		a.picture AS "picture",
+		a.mp3desc AS "mp3desc",
+		a.del_flag AS "delFlag",
+		a.mp4desc AS "mp4desc",
+		a.xlocation AS "xlocation",
+		a.ylocation AS "ylocation",
+		a.sfprope AS "sfprope",
+		a.remarks AS "remarks",
+		a.type AS "type"
+	</sql>
+	
+	<sql id="dzdlViewSpotJoins">
+	</sql>
+	
+    <resultMap type="DzdlViewSpot" id="DzdlViewSpotResult" autoMapping="true">
+    	<result column="details" property="details"   typeHandler="com.jeeplus.common.mapper.ConvertBlobTypeHandler"/>
+    </resultMap>
+    
+	<select id="get" resultMap="DzdlViewSpotResult" >
+		SELECT 
+			<include refid="dzdlViewSpotColumns"/>
+		FROM dzdl_view_spot a
+		<include refid="dzdlViewSpotJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultMap="DzdlViewSpotResult" >
+		SELECT 
+			<include refid="dzdlViewSpotColumns"/>
+		FROM dzdl_view_spot a
+		<include refid="dzdlViewSpotJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name = #{name}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultMap="DzdlViewSpotResult" >
+		SELECT 
+			<include refid="dzdlViewSpotColumns"/>
+		FROM dzdl_view_spot a
+		<include refid="dzdlViewSpotJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO dzdl_view_spot(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			name,
+			logo,
+			description,
+			details,
+			picture,
+			mp3desc,
+			del_flag,
+			mp4desc,
+			xlocation,
+			ylocation,
+			sfprope,
+			remarks,
+			type
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{name},
+			#{logo},
+			#{description},
+			#{details},
+			#{picture},
+			#{mp3desc},
+			#{delFlag},
+			#{mp4desc},
+			#{xlocation},
+			#{ylocation},
+			#{sfprope},
+			#{remarks},
+			#{type}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE dzdl_view_spot SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			name = #{name},
+			logo = #{logo},
+			description = #{description},
+			details = #{details},
+			picture = #{picture},
+			mp3desc = #{mp3desc},
+			mp4desc = #{mp4desc},
+			xlocation = #{xlocation},
+			ylocation = #{ylocation},
+			sfprope = #{sfprope},
+			remarks = #{remarks},
+			type = #{type}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM dzdl_view_spot
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE dzdl_view_spot SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DzdlViewSpot" statementType="STATEMENT">
+		select * FROM dzdl_view_spot  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

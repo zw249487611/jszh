@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.bfll.dao.NewJiangsuAb01Dao">
+    
+	<sql id="jiangsuAb01Columns">
+		a.id AS "id",
+		a.aab001 AS "aab001",
+		a.aar040 AS "aar040",
+		a.aac001 AS "aac001",
+		a.aab002 AS "aab002",
+		a.aab003 AS "aab003",
+		a.aab004 AS "aab004",
+		a.aab005 AS "aab005",
+		a.aab006 AS "aab006",
+		a.aab007 AS "aab007",
+		a.aab008 AS "aab008",
+		a.aab009 AS "aab009",
+		a.aab010 AS "aab010",
+		a.aab011 AS "aab011",
+		a.aab012 AS "aab012",
+		a.aab015 AS "aab015",
+		a.aab016 AS "aab016",
+		a.aab017 AS "aab017",
+		a.aar041 AS "aar041",
+		a.aar001 AS "aar001",
+		a.aar022 AS "aar022",
+		a.aar023 AS "aar023",
+		a.aar024 AS "aar024",
+		a.aar025 AS "aar025",
+		a.baz002 AS "baz002",
+		a.aab018 AS "aab018",
+		a.aab019 AS "aab019",
+		a.aar008 AS "aar008",
+		a.aak033 AS "aak033",
+		a.aab025 AS "aab025",
+		a.aab026 AS "aab026",
+		a.aab027 AS "aab027",
+		a.aab028 AS "aab028",
+		a.aab029 AS "aab029",
+		a.aab030 AS "aab030",
+		a.aab031 AS "aab031",
+		a.aab021 AS "aab021",
+		a.acid AS "acid",
+		a.del_flag AS "delFlag",
+		a.aab032 AS "aab032",
+		a.aab033 AS "aab033",
+		a.aab034 AS "aab034",
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date
+	</sql>
+	
+	<sql id="jiangsuAb01Joins">
+	</sql>
+	
+    
+	<select id="get" resultType="NewJiangsuAb01" >
+		SELECT 
+			<include refid="jiangsuAb01Columns"/>
+		FROM jiangsu_ab01 a
+		<include refid="jiangsuAb01Joins"/>
+		WHERE a.id = #{id}
+		and a.del_flag = '0'
+	</select>
+	
+	<select id="getHuZhu" resultType="NewJiangsuAb01">
+		SELECT 
+			<include refid="jiangsuAb01Columns"/>
+		FROM jiangsu_ab01 a
+		<include refid="jiangsuAb01Joins"/>
+		WHERE a.acid = #{id}
+		and  a.aab006= '01'
+		AND (a.`AAB015` = '1' OR a.`AAB015` = '4' or a.aab015 = '5')
+		and a.del_flag = '0'
+	</select>
+	
+	<select id="findByAcid" resultType="NewJiangsuAb01">
+		SELECT 
+			<include refid="jiangsuAb01Columns"/>
+		FROM jiangsu_ab01 a
+		<include refid="jiangsuAb01Joins"/>
+		WHERE a.acid = #{id}
+		AND a.del_flag='0'
+	</select>
+	
+	<select id="findListByHzsfzh" resultType="NewJiangsuAb01">
+		SELECT 
+			<include refid="jiangsuAb01Columns"/>
+		FROM jiangsu_ab01 a
+		<include refid="jiangsuAb01Joins"/>
+		WHERE a.aab004 = #{hzsfzh}
+		AND a.del_flag='0' and a.aab015 in ('1','4');
+	</select>
+	
+	<select id="findByAcidBak" resultType="NewJiangsuAb01">
+		SELECT 
+			<include refid="jiangsuAb01Columns"/>
+		FROM jiangsu_ab01_bak a
+		<include refid="jiangsuAb01Joins"/>
+		WHERE a.acid = #{id}
+		AND a.del_flag='0'
+	</select>
+	
+	<select id="findList" resultType="NewJiangsuAb01" >
+		SELECT 
+			<include refid="jiangsuAb01Columns"/>
+		FROM jiangsu_ab01 a
+		<include refid="jiangsuAb01Joins"/>
+		<where>
+			a.del_flag='0'
+			<if test="aar040 != null and aar040 != ''">
+				AND a.aar040 = #{aar040}
+			</if>
+			<if test="aab002 != null and aab002 != ''">
+				AND a.aab002 = #{aab002}
+			</if>
+			<if test="aab003 != null and aab003 != ''">
+				AND a.aab003 = #{aab003}
+			</if>
+			<if test="aab004 != null and aab004 != ''">
+				AND a.aab004 = #{aab004}
+			</if>
+			<if test="aab005 != null and aab005 != ''">
+				AND a.aab005 = #{aab005}
+			</if>
+			<if test="aab006 != null and aab006 != ''">
+				AND a.aab006 = #{aab006}
+			</if>
+			<if test="aab030 != null and aab030 != ''">
+				AND a.aab030 = #{aab030}
+			</if>
+			<if test="aab032 != null and aab032 != ''">
+				AND a.aab032 = #{aab032}
+			</if>
+			<if test="aab033 != null and aab033 != ''">
+				AND a.aab033 = #{aab033}
+			</if>
+			<if test="aab034 != null and aab034 != ''">
+				AND a.aab034 = #{aab034}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="NewJiangsuAb01" >
+		SELECT 
+			<include refid="jiangsuAb01Columns"/>
+		FROM jiangsu_ab01 a
+		<include refid="jiangsuAb01Joins"/>
+		<where>
+			1=1
+			and a.del_flag = '0'
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jiangsu_ab01(
+			id,
+			aab001,
+			aar040,
+			aac001,
+			aab002,
+			aab003,
+			aab004,
+			aab005,
+			aab006,
+			aab007,
+			aab008,
+			aab009,
+			aab010,
+			aab011,
+			aab012,
+			aab015,
+			aab016,
+			aab017,
+			aar041,
+			aar001,
+			aar022,
+			aar023,
+			aar024,
+			aar025,
+			baz002,
+			aab018,
+			aab019,
+			aar008,
+			aak033,
+			aab025,
+			aab026,
+			aab027,
+			aab028,
+			aab029,
+			aab030,
+			aab031,
+			aab021,
+			acid,
+			aab032,
+			aab033,
+			aab034,
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date
+		) VALUES (
+			#{id},
+			#{aab001},
+			#{aar040},
+			#{aac001},
+			#{aab002},
+			#{aab003},
+			#{aab004},
+			#{aab005},
+			#{aab006},
+			#{aab007},
+			#{aab008},
+			#{aab009},
+			#{aab010},
+			#{aab011},
+			#{aab012},
+			#{aab015},
+			#{aab016},
+			#{aab017},
+			#{aar041},
+			#{aar001},
+			#{aar022},
+			#{aar023},
+			#{aar024},
+			#{aar025},
+			#{baz002},
+			#{aab018},
+			#{aab019},
+			#{aar008},
+			#{aak033},
+			#{aab025},
+			#{aab026},
+			#{aab027},
+			#{aab028},
+			#{aab029},
+			#{aab030},
+			#{aab031},
+			#{aab021},
+			#{acid},
+			#{aab032},
+			#{aab033},
+			#{aab034},
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}
+		)
+	</insert>
+	
+	<insert id="insertAb01Bak">
+		INSERT INTO jiangsu_ab01_bak(
+			id,
+			aab001,
+			aar040,
+			aac001,
+			aab002,
+			aab003,
+			aab004,
+			aab005,
+			aab006,
+			aab007,
+			aab008,
+			aab009,
+			aab010,
+			aab011,
+			aab012,
+			aab015,
+			aab016,
+			aab017,
+			aar041,
+			aar001,
+			aar022,
+			aar023,
+			aar024,
+			aar025,
+			baz002,
+			aab018,
+			aab019,
+			aar008,
+			aak033,
+			aab025,
+			aab026,
+			aab027,
+			aab028,
+			aab029,
+			aab030,
+			aab031,
+			aab021,
+			acid,
+			aab032,
+			aab033,
+			aab034,
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date
+		) VALUES (
+			#{id},
+			#{aab001},
+			#{aar040},
+			#{aac001},
+			#{aab002},
+			#{aab003},
+			#{aab004},
+			#{aab005},
+			#{aab006},
+			#{aab007},
+			#{aab008},
+			#{aab009},
+			#{aab010},
+			#{aab011},
+			#{aab012},
+			#{aab015},
+			#{aab016},
+			#{aab017},
+			#{aar041},
+			#{aar001},
+			#{aar022},
+			#{aar023},
+			#{aar024},
+			#{aar025},
+			#{baz002},
+			#{aab018},
+			#{aab019},
+			#{aar008},
+			#{aak033},
+			#{aab025},
+			#{aab026},
+			#{aab027},
+			#{aab028},
+			#{aab029},
+			#{aab030},
+			#{aab031},
+			#{aab021},
+			#{acid},
+			#{aab032},
+			#{aab033},
+			#{aab034},
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jiangsu_ab01 SET 	
+			aab001 = #{aab001},
+			aar040 = #{aar040},
+			aac001 = #{aac001},
+			aab002 = #{aab002},
+			aab003 = #{aab003},
+			aab004 = #{aab004},
+			aab006 = #{aab006},
+			aab007 = #{aab007},
+			aab008 = #{aab008},
+			aab009 = #{aab009},
+			aab010 = #{aab010},
+			aab011 = #{aab011},
+			aab012 = #{aab012},
+			aab015 = #{aab015},
+			aab016 = #{aab016},
+			aab017 = #{aab017},
+			aar041 = #{aar041},
+			aar001 = #{aar001},
+			aar022 = #{aar022},
+			aar023 = #{aar023},
+			aar024 = #{aar024},
+			aar025 = #{aar025},
+			baz002 = #{baz002},
+			aab018 = #{aab018},
+			aab019 = #{aab019},
+			aar008 = #{aar008},
+			aak033 = #{aak033},
+			aab025 = #{aab025},
+			aab026 = #{aab026},
+			aab027 = #{aab027},
+			aab028 = #{aab028},
+			aab029 = #{aab029},
+			aab030 = #{aab030},
+			aab031 = #{aab031},
+			aab021 = #{aab021},
+			aab032 = #{aab032},
+			aab033 = #{aab033},
+			aab034 = #{aab034},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}
+		WHERE id = #{id}
+		AND  acid = #{acid}
+		
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM jiangsu_ab01
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE jiangsu_ab01 SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="NewJiangsuAb01" statementType="STATEMENT">
+		select * FROM jiangsu_ab01  where ${propertyName} = '${value}' and del_flag = '0'
+	</select>
+	<!-- 获取总人数 -->
+	<select id="gettotalCount" resultType="java.lang.Integer">
+		select 
+		count(1)
+		from jiangsu_ac01 a
+		inner join jiangsu_ab01 b on a.id = b.acid and b.del_flag = '0' and b.aab015 in ('1','4')
+		where 
+			1=1
+		<if test="hzsfzh != null and hzsfzh !=''">
+			 AND a.hzsfzh = #{hzsfzh}
+		</if>
+		<if test="aac006 != null and aac006 != ''">
+				AND a.AAC006 = #{aac006}
+		</if>
+		<if test="aar010 != null and aar010 != ''">
+				AND a.aar010 = #{aar010}
+			</if>
+		
+		<if test="aar040 != null and aar040 != ''">
+				AND a.aar040 = #{aar040}
+		</if>
+		<if test="aar012 != null and aar012 != ''">
+				AND a.aar012 = #{aar012}
+		</if>
+		<if test="aar004 != null and aar004 != ''">
+				AND a.aar004 = #{aar004}
+		</if>
+		<if test="aar005 != null and aar005 != ''">
+				AND a.aar005 = #{aar005}
+		</if>
+		<if test="aar006 != null and aar006 != ''">
+				AND a.aar006 = #{aar006}
+		</if>
+		<if test="aab002 != null and aab002 != ''">
+				AND b.aab002 = #{aab002}
+		</if>
+		<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+		</if>
+		<if test="sfzcxpk != null and sfzcxpk != ''">
+				AND a.sfzcxpk = #{sfzcxpk}
+			</if>
+			<if test="tpnd != null and tpnd != ''">
+				AND a.tpnd = #{tpnd}
+			</if>
+	</select>
+	<!-- ac08中获取总人数 -->
+	<select id="gettotalCount1" resultType="java.lang.Integer">
+		select 
+		count(1)
+		from jiangsu_ac01 a
+		inner join jiangsu_ab01 b on a.id = b.acid and b.del_flag = '0' and b.aab015 in ('1','4')
+		where 
+			1=1 and a.del_flag = '0'
+		<if test="aab004 != null and aab004 !=''">
+			 AND a.hzsfzh = #{aab004}
+		</if>
+		<if test="xjd != null and xjd != '' and xjd !=  1 ">
+			<if test="aac006 != null and aac006 != ''">
+				AND a.AAC006 = #{aac006}
+			</if>
+			AND (a.aac006 = '03' or a.aac006 = '06')
+		</if>
+		
+		<if test="aar040 != null and aar040 != ''">
+				AND a.aar040 = #{aar040}
+			</if>
+		<if test="year != null and year != ''">
+			AND a.aar040 = #{year}
+		</if>
+		
+		<if test="aar004 != null and aar004 != ''">
+				AND a.aar004 = #{aar004}
+		</if>
+		<if test="aar005 != null and aar005 != ''">
+				AND a.aar005 = #{aar005}
+		</if>
+		<if test="aar006 != null and aar006 != ''">
+				AND a.aar006 = #{aar006}
+		</if>
+		<if test="xjd != null and xjd != '' and xjd ==  1 ">
+			AND (a.aac006 = '01' or a.aac006 = '02' or a.aac006 = '04' or a.aac006 = '05')
+			</if>
+		<!-- <if test="aab002 != null and aab002 != ''">
+				AND b.aab002 = #{aab002}
+		</if> -->
+		<!-- <if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+		</if> -->
+		<if test="aab002 != null and aab002 != ''">
+			AND a.hzxm LIKE 
+				<if test="dbName == 'oracle'">'%'||#{aab002}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{aab002}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{aab002},'%')</if>
+			</if>
+		<if test="sfjd != null and sfjd != ''">
+				<if test="sfjd == 0">
+				AND (select count(1) from jiangsu_ac08 c
+			where  a.id = c.Acid and c.del_flag='0') = 0
+				</if>
+				<if test="sfjd ==1">
+				AND (select count(1) from jiangsu_ac08 c
+			where  a.id = c.Acid and c.del_flag='0')>0
+				</if>
+			</if>
+	</select>
+	
+	<!-- 贫困户人口导出 -->
+	<select id="findListExport1" resultType="com.jeeplus.modules.bfll.entity.NewJiangsuAb01E" >
+		SELECT 
+			a.aar040 as "aar040",
+			a.aab002 as "aab002",
+			t1.label as "sex",
+			a.aab004 as "aab004",
+			t2.label as "yhzgx",
+			t3.label as "sczt",
+			t4.label as "jkzk",
+			t5.label as "mz",
+			t6.label as "whcd",
+			t7.label as "zzmm",
+			t8.label as "ldjn",
+			t9.label as "zxszk",
+			t10.label as "sfxsdb",
+			b.hzxm as 'hzxm',
+			r1.name as 'xqName',
+			r2.name as 'xzName',
+			r3.name as 'cjName',
+			b.hzsfzh as "hzsfzh"
+		from jiangsu_ab01 a
+		left join jiangsu_ac01 b on a.acid=b.id
+		left join sys_area r1 on r1.code=b.aar004 
+		left join sys_area r2 on r2.code=b.aar005 
+		left join sys_area r3 on r3.code=b.aar006 
+		LEFT JOIN sys_dict t1 on t1.value = a.AAB003 and t1.type='sex'
+		LEFT JOIN sys_dict t2 on t2.value = a.AAB006 and t2.type='yhzgx'
+		LEFT JOIN sys_dict t3 on t3.value = a.AAB015 and t3.type='sczt'
+		LEFT JOIN sys_dict t4 on t4.value = a.AAB017 and t4.type='jkzk'
+		LEFT JOIN sys_dict t5 on t5.value = a.AAB007 and t5.type='nation_dict'
+		LEFT JOIN sys_dict t6 on t6.value = a.AAB008 and t6.type='whcd'
+		LEFT JOIN sys_dict t7 on t7.value = a.AAK033 and t7.type='zzmm'
+		LEFT JOIN sys_dict t8 on t8.value = a.AAB010 and t8.type='ldjn'
+		LEFT JOIN sys_dict t9 on t9.value = a.AAB009 and t9.type='zxszk'
+		LEFT JOIN sys_dict t10 on t10.value = a.AAB030 and t10.type='yes_no'
+		<where>
+			a.del_flag='0'
+			and a.aab015 in ('1','4')
+			<if test="hzsfzh != null and hzsfzh !=''">
+			 AND b.hzsfzh= #{hzsfzh}
+			</if>
+			<if test="aab002 != null and aab002 != ''">
+			 AND a.aab002 = #{aab002}
+			</if>
+			<if test="aar040 != null and aar040 != ''">
+				AND a.aar040 = #{aar040}
+			</if>
+			<if test="xq != null and xq != ''">
+				AND b.aar004 = #{xq}
+			</if>
+			<if test="xz != null and xz != ''">
+				AND b.aar005 = #{xz}
+			</if>
+			<if test="cj != null and cj != ''">
+				AND b.aar006 = #{cj}
+			</if>
+			<if test="aar012 != null and aar012 != ''">
+				AND b.aar012 = #{aar012}
+			</if>
+			<if test="aac006 != null and aac006 != ''">
+				AND b.aac006 = #{aac006}
+			</if>
+			<if test="aar010 != null and aar010 != ''">
+				AND b.aar010 = #{aar010}
+			</if>
+			<if test="sfzcxpk != null and sfzcxpk != ''">
+				AND b.sfzcxpk = #{sfzcxpk}
+			</if>
+			<if test="tpnd != null and tpnd != ''">
+				AND b.tpnd = #{tpnd}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND b.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListBySfzh" resultType="NewJiangsuAb01">
+		select
+			a.id AS "id",
+			a.aab001 AS "aab001",
+			a.aar040 AS "aar040",
+			a.aac001 AS "aac001",
+			a.aab002 AS "aab002",
+			a.aab003 AS "aab003",
+			a.aab004 AS "aab004",
+			a.aab005 AS "aab005",
+			a.aab006 AS "aab006",
+			a.aab007 AS "aab007",
+			a.aab008 AS "aab008",
+			a.aab009 AS "aab009",
+			a.aab010 AS "aab010",
+			a.aab011 AS "aab011",
+			a.aab012 AS "aab012",
+			a.aab015 AS "aab015",
+			a.aab016 AS "aab016",
+			a.aab017 AS "aab017",
+			a.aar041 AS "aar041",
+			a.aar001 AS "aar001",
+			a.aar022 AS "aar022",
+			a.aar023 AS "aar023",
+			a.aar024 AS "aar024",
+			a.aar025 AS "aar025",
+			a.baz002 AS "baz002",
+			a.aab018 AS "aab018",
+			a.aab019 AS "aab019",
+			a.aar008 AS "aar008",
+			a.aak033 AS "aak033",
+			a.aab025 AS "aab025",
+			a.aab026 AS "aab026",
+			a.aab027 AS "aab027",
+			a.aab028 AS "aab028",
+			a.aab029 AS "aab029",
+			a.aab030 AS "aab030",
+			a.aab031 AS "aab031",
+			a.aab021 AS "aab021",
+			a.acid AS "acid",
+			a.del_flag AS "delFlag",
+			b.aar004 AS "aab032",
+			b.aar005 AS "aab033",
+			b.aar006 AS "aab034",
+			a.create_by AS "createBy.id",
+			a.create_date,
+			a.update_by AS "updateBy.id",
+			a.update_date
+			from jiangsu_ab01 a 
+			left join jiangsu_ac01 b on a.acid=b.id and b.del_flag='0'
+			where a.del_flag='0' and a.aab015 in ('1','4') and a.aab004 like concat('%',#{0},'%')
+	</select>
+</mapper>

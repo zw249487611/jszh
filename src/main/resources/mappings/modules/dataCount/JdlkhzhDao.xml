@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.dataCount.dao.JdlkhzhDao">
+
+	<sql id="jdlkhzhColumns">
+		a.id AS "id",
+		'' AS "createBy.id",
+		'' AS "createDate",
+		"updateBy.id",
+		'' AS "updateDate",
+		a.remarks AS "remarks",
+		'0' AS
+		"delFlag",
+		a.aar040 AS "nd",
+		a.xq AS "xq",
+		a.xz AS "xz",
+		a.xc AS "xc",
+		a.xm AS "xm",
+		a.sfzh AS "sfzh",
+		a.jtrks AS "jtrks",
+		a.sfzcxpk AS
+		"sfzcxpk",
+		a.tpnd AS "tpnd"
+	</sql>
+
+	<sql id="jdlkhzhJoins">
+	</sql>
+
+
+	<select id="get" resultType="Jdlkhzh">
+		SELECT
+		<include refid="jdlkhzhColumns" />
+		FROM t_pkhxx_temp a
+		<include refid="jdlkhzhJoins" />
+		WHERE a.id = #{id}
+	</select>
+	<select id="findCount" parameterType="com.jeeplus.modules.dataCount.entity.Jdlkhzh"
+		resultType="java.lang.Integer">
+		SELECT
+		sum(1)
+		from jiangsu_ac01 a
+		inner JOIN jiangsu_ab01 b on a.id =
+		b.acid and b.AAB015 in ('1','4') and b.AAB006 = '01' and b.del_flag =
+		'0'
+		LEFT JOIN sys_area c on a.aar008 = c.id
+		LEFT JOIN sys_area d on
+		c.parent_id = d.id
+		LEFT JOIN sys_area e on d.parent_id = e.id
+		<where>
+			1=1
+			and a.del_flag = '0'
+			<if test="nd != null and nd != ''">
+				AND a.nd = #{nd}
+			</if>
+			<if test="xq != null and xq != ''">
+				AND a.xq = #{xq}
+			</if>
+			<if test="xz != null and xz != ''">
+				AND a.xz = #{xz}
+			</if>
+			<if test="xc != null and xc != ''">
+				AND a.xc = #{xc}
+			</if>
+			<if test="xm != null and xm != ''">
+				AND a.xm LIKE
+				<if test="dbName == 'oracle'">'%'||#{xm}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{xm}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{xm},'%')</if>
+			</if>
+			<if test="sfzh != null and sfzh != ''">
+				AND a.sfzh = #{sfzh}
+			</if>
+		</where>
+	</select>
+	<select id="findList" resultType="Jdlkhzh">
+		SELECT
+		a.id AS "id",
+		a.aar040 AS "nd",
+		CONCAT(e.`name`,d.`name`,c.`name`) as dz,
+		b.AAB002 AS "xm",
+		b.AAB004 AS
+		"sfzh",
+		(SELECT count(1) as jtrks from jiangsu_ab01 f where f.acid =
+		a.id and f.del_flag = '0' and f.AAB015 in ('1','4')) as jtrks,
+		a.aar012 as lxfs,
+		a.AAC006 as pkhsx,
+		a.AAC007 as zpyy,
+		a.AAR010 as tpbz,
+		a.sfyzf as sfyzf,
+		a.tpnd as tpnd,
+		case when ac08.id is not null then '1' else '0' end as sfjd
+		from jiangsu_ac01 a
+		inner JOIN jiangsu_ab01 b on a.id = b.acid and b.AAB015 in ('1','4') and b.AAB006 = '01' and b.del_flag = '0'
+		LEFT JOIN sys_area c on a.aar006 = c.id
+		LEFT JOIN sys_area d on a.aar005 = d.id
+		LEFT JOIN sys_area e on a.aar004 = e.id
+		<if test="(sfzh != '' and sfzh != null) or (xm != '' and xm != null)">
+			INNER JOIN jiangsu_ab01 f on f.acid = a.id and f.AAB015 in
+			('1','4') and f.del_flag = '0'
+		</if>
+		LEFT JOIN  jiangsu_ac08 ac08 on a.id = ac08.Acid and ac08.del_flag='0'
+		<where>
+			1=1
+			and a.del_flag = '0'
+			<if test="nd != null and nd != ''">
+				AND a.aar040 = #{nd}
+			</if>
+			<if test="xq != null and xq != ''">
+				AND e.id = #{xq}
+			</if>
+			<if test="xz != null and xz != ''">
+				AND d.id = #{xz}
+			</if>
+			<if test="xc != null and xc != ''">
+				AND c.id = #{xc}
+			</if>
+			<if test="xm != null and xm != ''">
+				AND f.AAB002 LIKE
+				<if test="dbName == 'oracle'">'%'||#{xm}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{xm}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{xm},'%')</if>
+			</if>
+			<if test="sfzh != null and sfzh != ''">
+				AND f.AAB004 = #{sfzh}
+			</if>
+			<if test="pkhsx != null and pkhsx != ''">
+				AND a.AAC006 = #{pkhsx}
+			</if>
+			<if test="zpyy != null and zpyy != ''">
+				AND a.AAC007 = #{zpyy}
+			</if>
+			<if test="sfzcxpk != null and sfzcxpk != ''">
+				AND a.sfzcxpk = #{sfzcxpk}
+			</if>
+			<if test="tpnd != null and tpnd != ''">
+				AND a.tpnd = #{tpnd}
+			</if>
+			<if test="tpbz != null and tpbz != '' and tpbz != '-1'">
+				AND a.AAR010 = #{tpbz}
+			</if>
+			<if test="sfyzf != null and sfyzf != '' ">
+				AND a.sfyzf = #{sfyzf}
+			</if>
+			<if test="sfjd != null and sfjd != ''">
+				<if test="sfjd == 0">
+					AND ac08.id is null AND a.aac006 != '03' AND a.aac006 != '06'
+				</if>
+				<if test="sfjd == 1">
+					AND ac08.id is not null
+				</if>
+			</if>
+		</where>
+		group by a.id
+		ORDER BY a.order1 desc
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+		</choose>
+		
+	</select>
+
+	<select id="findAllList" resultType="Jdlkhzh">
+		SELECT
+		<include refid="jdlkhzhColumns" />
+		FROM t_pkhxx_temp a
+		<include refid="jdlkhzhJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+</mapper>

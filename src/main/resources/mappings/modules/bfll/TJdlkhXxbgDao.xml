@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.bfll.dao.TJdlkhXxbgDao">
+    
+	<sql id="tJdlkhXxbgColumns">
+		a.id AS "id",
+		a.acid AS "acid",
+		a.bglx AS "bglx",
+		a.nd AS "nd",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.acid_bak AS "acidBak",
+		a.bgyy AS "bgyy",
+		case c.aab002 when null then b.hzxm else c.aab002 end AS "hzxm",
+		xqarea.name AS "xqname",
+		xzarea.name AS "xzname",
+		cunarea.name AS "cunname",
+		u.name AS "createBy.name"
+	</sql>
+	
+	<sql id="tJdlkhXxbgJoins">
+	left join jiangsu_ac01 b on b.id = a.acid
+	left join jiangsu_ab01 c on c.acid = b.id and c.aab006='01' and c.del_flag='0'
+	left join sys_area s on s.id = b.aar008 and s.del_flag='0'
+	left join sys_area xqarea on xqarea.id = b.aar004
+	left join sys_area xzarea on xzarea.id = b.aar005
+	left join sys_area cunarea on cunarea.id = b.aar006
+	left join sys_user u on a.create_by = u.id
+	</sql>
+    
+	<select id="get" resultType="TJdlkhXxbg" >
+		SELECT 
+			<include refid="tJdlkhXxbgColumns"/>
+		FROM t_jdlkh_xxbg a
+		<include refid="tJdlkhXxbgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TJdlkhXxbg" >
+		SELECT 
+			<include refid="tJdlkhXxbgColumns"/>
+		FROM t_jdlkh_xxbg a
+		<include refid="tJdlkhXxbgJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="acid != null and acid !=''">
+			 	and a.acid = #{acid}
+			</if>
+			<if test="bglx != null and bglx !=''">
+			 	and a.bglx like
+			 		<if test="dbName == 'oracle'">'%'||#{bglx}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bglx}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{bglx},'%')</if>
+			</if>
+			<if test="nd != null and nd !=''">
+			 	and a.nd = #{nd}
+			</if>
+			<if test="acidBak != null and acidBak !=''">
+			 	and a.acid_bak = #{acidBak}
+			</if>
+			<if test="currentAreaId != null and currentAreaId !=''">
+				AND (s.id = #{currentAreaId} or s.parent_ids LIKE
+					<if test="dbName == 'oracle'">'%'||#{currentAreaId}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{currentAreaId}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{currentAreaId},'%')</if>
+				)
+			</if>
+			<if test="hzxm != null and hzxm !=''">
+				AND (c.aab002 LIKE
+					<if test="dbName == 'oracle'">'%'||#{hzxm}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{hzxm}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{hzxm},'%')</if>
+				) 
+			</if>			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TJdlkhXxbg" >
+		SELECT 
+			<include refid="tJdlkhXxbgColumns"/>
+		FROM t_jdlkh_xxbg a
+		<include refid="tJdlkhXxbgJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_jdlkh_xxbg(
+			id,
+			acid,
+			bglx,
+			nd,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			acid_bak,
+			bgyy
+		) VALUES (
+			#{id},
+			#{acid},
+			#{bglx},
+			#{nd},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{acidBak},
+			#{bgyy}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_jdlkh_xxbg SET 	
+			acid = #{acid},
+			bglx = #{bglx},
+			nd = #{nd},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			acid_bak=#{acidBak},
+			bgyy=#{bgyy}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM t_jdlkh_xxbg
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE t_jdlkh_xxbg SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="TJdlkhXxbg" statementType="STATEMENT">
+		select * FROM t_jdlkh_xxbg  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

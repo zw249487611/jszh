@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.dzdlwb.dao.DzdlWbDao">
+    
+	<sql id="dzdlWbColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.introduce AS "details",
+		a.type AS "type",
+		a.logo AS "logo",
+		a.description AS "description",
+		a.picture AS "picture",
+		a.mp3desc AS "mp3desc",
+		a.mp4desc AS "mp4desc",
+		a.xlocation AS "xlocation",
+		a.ylocation AS "ylocation",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="dzdlWbJoins">
+	</sql>
+	
+    <resultMap type="DzdlWb" id="DzdlWbResult" autoMapping="true">
+    	<result column="description" property="description"   typeHandler="com.jeeplus.common.mapper.ConvertBlobTypeHandler"/>
+    </resultMap>
+    
+	<select id="get" resultMap="DzdlWbResult" >
+		SELECT 
+			<include refid="dzdlWbColumns"/>
+		FROM dzdl_wb a
+		<include refid="dzdlWbJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultMap="DzdlWbResult" >
+		SELECT 
+			<include refid="dzdlWbColumns"/>
+		FROM dzdl_wb a
+		<include refid="dzdlWbJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultMap="DzdlWbResult" >
+		SELECT 
+			<include refid="dzdlWbColumns"/>
+		FROM dzdl_wb a
+		<include refid="dzdlWbJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO dzdl_wb(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag,
+			name,
+			introduce,
+			type,
+			logo,
+			description,
+			picture,
+			mp3desc,
+			mp4desc,
+			xlocation,
+			ylocation,
+			remarks
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag},
+			#{name},
+			#{details},
+			#{type},
+			#{logo},
+			#{description},
+			#{picture},
+			#{mp3desc},
+			#{mp4desc},
+			#{xlocation},
+			#{ylocation},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE dzdl_wb SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			name = #{name},
+			introduce = #{details},
+			type = #{type},
+			logo = #{logo},
+			description = #{description},
+			picture = #{picture},
+			mp3desc = #{mp3desc},
+			mp4desc = #{mp4desc},
+			xlocation = #{xlocation},
+			ylocation = #{ylocation},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM dzdl_wb
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE dzdl_wb SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="DzdlWb" statementType="STATEMENT">
+		select * FROM dzdl_wb  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>
